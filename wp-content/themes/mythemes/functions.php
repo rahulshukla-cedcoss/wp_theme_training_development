@@ -37,6 +37,7 @@ function wpb_custom_new_menu() {
 }
 add_action( 'init', 'wpb_custom_new_menu' );
 
+// Post thumbnail.
 add_theme_support( 'post-thumbnails' );
 
 /**
@@ -54,3 +55,72 @@ function themename_custom_header_setup() {
 	add_theme_support( 'custom-header', $args );
 }
 add_action( 'after_setup_theme', 'themename_custom_header_setup' );
+
+
+
+/**
+ * Custom sidebar and widgets
+ */
+function my_register_sidebars() {
+	/* Register the 'primary' sidebar. */
+	register_sidebar(
+		array(
+			'id'            => 'primary',
+			'name'          => __( 'Primary Sidebar' ),
+			'description'   => __( 'A short description of the sidebar.' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widget-title">',
+			'after_title'   => '</h3>',
+		)
+	);
+	/* Repeat register_sidebar() code for additional sidebars. */
+	register_sidebar(
+		array(
+			'id'            => 'secondary',
+			'name'          => __( 'secondary Sidebar' ),
+			'description'   => __( 'A short description of the sidebar.' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widget-title">',
+			'after_title'   => '</h3>',
+		)
+	);
+}
+add_action( 'widgets_init', 'my_register_sidebars' );
+
+/**
+ * Custom post format
+ *
+ * @return void
+ */
+function themename_post_formats_setup() {
+	add_theme_support( 'post-formats', array( 'aside', 'gallery' ) );
+}
+add_action( 'after_setup_theme', 'themename_post_formats_setup' );
+
+/**
+ * Custom logo
+ */
+function themename_custom_logo_setup() {
+	$defaults = array(
+		'height'      => 100,
+		'width'       => 400,
+		'flex-height' => true,
+		'flex-width'  => true,
+		'header-text' => array( 'site-title', 'site-description' ),
+	);
+	add_theme_support( 'custom-logo', $defaults );
+}
+add_action( 'after_setup_theme', 'themename_custom_logo_setup' );
+
+// This code is responsible for to enable  Custom background color.
+$args = array(
+	'default-color' => '000',
+	'default-image' => get_template_directory_uri() . '/images/wapuu.jpg',
+);
+add_theme_support( 'custom-background', $args );
+
+// Automatic theme support.
+add_theme_support( 'automatic-feed-links' );
+
