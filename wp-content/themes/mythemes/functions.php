@@ -125,3 +125,45 @@ if ( ! isset( $content_width ) ) {
 	$content_width = 800;
 }
 
+/**
+ * Getting curent user roles here.
+ */
+function get_current_user_role() {
+	$current_user = wp_get_current_user();
+	$user_roles   = $current_user->roles;
+	$user_role    = array_shift( $user_roles );
+	return $user_role;
+}
+
+add_action(
+	'template_redirect',
+	function () {
+
+		$page_id = 1840;
+		$user    = get_current_user_role();
+
+		// If logged in do not redirect.
+		// If user is then restirct access to  author center.
+		if ( is_user_logged_in() && ( 'subscriber' === $user ) ) {
+			$redirect = false;
+			if ( is_page( $page_id ) ) {
+				$redirect = true;
+			}
+			if ( $redirect ) {
+				wp_safe_redirect( esc_url( wp_login_url() ), 307 ); // Redirecting user to login page if found true.
+			}
+		} elseif ( ! is_user_logged_in() ) { // Checking for the guest user.
+			$redirect = false;
+
+			if ( is_page( 1840 ) || is_page( 1842 ) ) { // Restrict guest user from accessing author center and subscriber center pages.
+				$redirect = true;
+			}
+
+			if ( $redirect ) {
+				wp_safe_redirect( esc_url( wp_login_url() ), 307 ); // Redirecting user to login page if found true.
+			}
+		} elseif ( is_user_logged_in() && ( 'author' === $user ) ) { // Redirect for author.
+			$redirect = false;
+		}
+	}
+);
