@@ -121,6 +121,7 @@ $args = array(
 );
 add_theme_support( 'custom-background', $args );
 
-// Automatic theme support.
-add_theme_support( 'automatic-feed-links' );
+if ( ! isset( $content_width ) ) {
+	$content_width = 800;
+}
 
