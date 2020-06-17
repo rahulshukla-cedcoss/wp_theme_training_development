@@ -45,3 +45,36 @@ function dlt_plugin() {
 	}
 }
 register_deactivation_hook( __FILE__, 'dlt_plugin' );
+
+
+add_filter( 'the_content', 'filter_content' );
+/**
+ * Filter_content
+ *
+ * @param [string] $content is a string.
+ */
+function filter_content( $content ) {
+	if ( is_singular() ) {
+		?>
+		<a href="https://twitter.com/intent/tweet?url=<?php the_permalink(); ?>" target="_blank"> Click here to tweet </a>
+		<?php
+		return $content;
+	} else {
+		return $content;
+	}
+}
+
+/**
+ * Undocumented function
+ *
+ * @param [string] $content is a string.
+ */
+function word_count( $content ) {
+	global $post;
+	if ( is_singular() ) {
+		$char_count = strlen( wp_strip_all_tags( strip_shortcodes( html_entity_decode( $post->post_content ) ) ) );
+	}
+	return $content . '<br>' . $char_count . ' ' . 'Characters';
+}
+
+add_filter( 'the_content', 'word_count' );
